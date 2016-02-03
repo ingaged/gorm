@@ -36,6 +36,21 @@ type DB struct {
 	joinTableHandlers map[string]JoinTableHandler
 }
 
+func OpenExisting(dialect string, database *sql.DB) DB {
+	var db = DB{
+		dialect:  NewDialect(dialect),
+		logger:   defaultLogger,
+		callback: DefaultCallback,
+		source:   "",
+		values:   map[string]interface{}{},
+		db:       database,
+	}
+
+	db.parent = &db
+
+	return db
+}
+
 func Open(dialect string, args ...interface{}) (DB, error) {
 	var db DB
 	var err error
